@@ -1,0 +1,17 @@
+folder: data/VG_data/
+load_keywords: True
+train_file: data/VG_data/preprocessed/train.jsonl
+valid_file: data/VG_data/preprocessed/valid.jsonl
+test_file: data/VG_data/preprocessed/test.jsonl
+class_num: 2
+seed: 2
+
+texts formated
+Count Vectorizer built
+word transform to vectors
+P: 0.8544
+R: 0.8780
+F: 0.8660
+AUC: 0.9488
+
+total time: 7.800983190536499
