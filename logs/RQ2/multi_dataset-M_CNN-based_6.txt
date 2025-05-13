@@ -1,0 +1,34 @@
+folder: data/Maldonado_data/
+batch_size: 50
+embed_dim: 300
+epoch_num: 20
+lr: 0.0001
+seq_len: 128
+train_file: data/Maldonado_data/preprocessed/train.jsonl
+valid_file: data/Maldonado_data/preprocessed/valid.jsonl
+test_file: data/Maldonado_data/preprocessed/test.jsonl
+device: cuda:1
+model_name: textcnn.pth
+class_num: 4
+seed: 6
+
+P: 0.9251
+R: 0.6803
+F: 0.7840
+AUC: 0.9763
+P4C1: 0.7578
+R4C1: 0.5872
+F4C1: 0.6617
+P4C2: 0.4222
+R4C2: 0.3363
+F4C2: 0.3744
+P4C3: 0.4231
+R4C3: 0.1594
+F4C3: 0.2316
+MacroP: 0.5344
+MacroR: 0.3610
+MacroF: 0.4226
+FFF: 0.5491
+
+total time: 482.01427388191223
+

@@ -1,0 +1,34 @@
+folder: data/Maldonado_data/
+batch_size: 64
+embed_dim: 300
+epoch_num: 20
+lr: 0.0001
+seq_len: 128
+train_file: data/Maldonado_data/preprocessed/train.jsonl
+valid_file: data/Maldonado_data/preprocessed/valid.jsonl
+test_file: data/Maldonado_data/preprocessed/test.jsonl
+device: cuda:1
+model_name: scgru.pth
+class_num: 4
+seed: 7
+
+P: 0.8964
+R: 0.7354
+F: 0.8080
+AUC: 0.9675
+P4C1: 0.7268
+R4C1: 0.6578
+F4C1: 0.6906
+P4C2: 0.5571
+R4C2: 0.3451
+F4C2: 0.4262
+P4C3: 0.2927
+R4C3: 0.1739
+F4C3: 0.2182
+MacroP: 0.5256
+MacroR: 0.3923
+MacroF: 0.4450
+FFF: 0.5739
+
+287.79228115081787
+

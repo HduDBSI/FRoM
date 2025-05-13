@@ -1,0 +1,31 @@
+folder: data/VG_data/
+load_keywords: True
+train_file: data/VG_data/preprocessed/train.jsonl
+valid_file: data/VG_data/preprocessed/valid.jsonl
+test_file: data/VG_data/preprocessed/test.jsonl
+class_num: 4
+seed: 3
+
+texts formated
+Count Vectorizer built
+word transform to vectors
+P: 0.9118
+R: 0.8543
+F: 0.8821
+AUC: 0.9565
+P4C1: 0.6429
+R4C1: 0.2045
+F4C1: 0.3103
+P4C2: 0.5814
+R4C2: 0.7042
+F4C2: 0.6369
+P4C3: 0.7246
+R4C3: 0.7194
+F4C3: 0.7220
+MacroP: 0.6496
+MacroR: 0.5427
+MacroF: 0.5564
+FFF: 0.6824
+
+total time: 14.444997310638428
+
