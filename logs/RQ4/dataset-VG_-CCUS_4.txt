@@ -1,0 +1,40 @@
+batch_size: 32
+token_max_length: 128
+epoch_num: 10
+embed_dim: 768
+lr: 2e-05
+weight_decay: 0.01
+dropout: 0.1
+device: cuda:1
+model_name: FRoM.pth
+folder: data/VG_data/
+train_file: data/VG_data/preprocessed/train.jsonl
+valid_file: data/VG_data/preprocessed/valid.jsonl
+test_file: data/VG_data/preprocessed/test.jsonl
+seed: 4
+class_num: 4
+weight: 0.4
+class_balance: None
+threshold: 0.5
+MTL: 1
+
+P: 0.9321
+R: 0.9724
+F: 0.9518
+AUC: 0.9887
+P4C1: 0.8000
+R4C1: 0.6364
+F4C1: 0.7089
+P4C2: 0.6941
+R4C2: 0.8310
+F4C2: 0.7564
+P4C3: 0.8069
+R4C3: 0.8417
+F4C3: 0.8239
+MacroP: 0.7670
+MacroR: 0.7697
+MacroF: 0.7631
+FFF: 0.8471
+
+cost time: 339.49030685424805
+

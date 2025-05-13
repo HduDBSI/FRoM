@@ -1,0 +1,40 @@
+batch_size: 32
+token_max_length: 128
+epoch_num: 10
+embed_dim: 768
+lr: 2e-05
+weight_decay: 0.01
+dropout: 0.1
+device: cuda:1
+model_name: FRoM.pth
+folder: data/Maldonado_data/
+train_file: data/Maldonado_data/preprocessed/train.jsonl
+valid_file: data/Maldonado_data/preprocessed/valid.jsonl
+test_file: data/Maldonado_data/preprocessed/test.jsonl
+seed: 5
+class_num: 4
+weight: 0.4
+class_balance: RUS
+threshold: 0.5
+MTL: 1
+
+P: 0.5067
+R: 0.9559
+F: 0.6623
+AUC: 0.9801
+P4C1: 0.4406
+R4C1: 0.6225
+F4C1: 0.5160
+P4C2: 0.2305
+R4C2: 0.5487
+F4C2: 0.3246
+P4C3: 0.1384
+R4C3: 0.5797
+F4C3: 0.2235
+MacroP: 0.2698
+MacroR: 0.5836
+MacroF: 0.3547
+FFF: 0.4620
+
+cost time: 461.6573815345764
+
