@@ -56,4 +56,40 @@ The `case.xlsx` file contains data for our case study:
 * Manual labels for these 40 comments.
 * Links to the corresponding code for these 40 comments.
 
+## FRoMD (FRoM Detector)
+* **Create a `models/` directory** in your project root.
+* Download the model weights `PMFRoM.pth` from
+  [https://github.com/HduDBSI/FRoM/releases/tag/V1.0.0](https://github.com/HduDBSI/FRoM/releases/tag/V1.0.0)
+  and place the file in:
 
+  ```
+  /models
+  ```
+To classify comments using FRoMD:
+
+```bash
+python FRoMD.py --device cpu --text "TODO: refactor this" "buggy code"
+```
+
+or run interactively:
+
+```bash
+python FRoMD.py --device cpu
+```
+
+Then enter comments one per line; finish input with an empty line.
+
+To build a standalone executable (optional):
+
+```bash
+pip install pyinstaller
+pyinstaller --onefile --hidden-import torch --hidden-import transformers FRoMD.py
+```
+
+Run the generated file (in `dist/`):
+
+```bash
+cd dist
+chmod +x FRoMD
+./FRoMD --device cpu --text "TODO: refactor this" "buggy code"
+```
