@@ -57,8 +57,9 @@ The `case.xlsx` file contains data for our case study:
 * Links to the corresponding code for these 40 comments.
 
 ## FRoMD (FRoM Detector)
-* **Create a `models/` directory** in your project root.
-* Download the model weights `PMFRoM.pth` from
+Create a `models/` directory in your project root.
+
+Download the model weights `PMFRoM.pth` from
   [https://github.com/HduDBSI/FRoM/releases/tag/V1.0.0](https://github.com/HduDBSI/FRoM/releases/tag/V1.0.0)
   and place the file in:
 
