@@ -16,7 +16,7 @@ methods = {
     'FRoM': 'FRoM.py'
 }
 
-log_folder = 'logs/RQ5'
+log_folder = 'logs/RQ6'
 
 rounds = 10
 class_num = 4
