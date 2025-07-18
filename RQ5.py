@@ -21,7 +21,7 @@ settings = [
 
 rounds = 10
 metric_list = ['MacroP', 'MacroR', 'MacroF']
-log_folder = f'logs/RQ4'
+log_folder = f'logs/RQ5'
 conda_env = 'pyten'
 
 argument = {
