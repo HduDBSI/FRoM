@@ -1,0 +1,34 @@
+folder: data/VG_data
+batch_size: 50
+embed_dim: 300
+epoch_num: 20
+lr: 0.0001
+seq_len: 128
+train_file: data/VG_data/preprocessed/train.jsonl
+valid_file: data/Maldonado_data/preprocessed/valid.jsonl
+test_file: data/Maldonado_data/preprocessed/test.jsonl
+device: cuda:1
+model_name: textcnn.pth
+class_num: 4
+seed: 9
+
+P: 0.5607
+R: 0.6614
+F: 0.6069
+AUC: 0.9196
+P4C1: 0.4894
+R4C1: 0.1523
+F4C1: 0.2323
+P4C2: 0.2450
+R4C2: 0.4336
+F4C2: 0.3131
+P4C3: 0.0907
+R4C3: 0.5362
+F4C3: 0.1551
+MacroP: 0.2750
+MacroR: 0.3741
+MacroF: 0.2335
+FFF: 0.3373
+
+total time: 158.32258582115173
+

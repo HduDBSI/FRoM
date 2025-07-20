@@ -1,0 +1,45 @@
+batch_size: 32
+token_max_length: 128
+epoch_num: 20
+embed_dim: 768
+lr: 2e-05
+weight_decay: 0.01
+dropout: 0.1
+device: cuda:1
+model_name: FRoM-BPE.pth
+folder: data/Maldonado_data/
+train_file: data/Maldonado_data/preprocessed/train.jsonl
+valid_file: data/VG_data/preprocessed/valid.jsonl
+test_file: data/VG_data/preprocessed/test.jsonl
+seed: 7
+class_num: 4
+weight: 0.4
+class_balance: CCUS
+threshold: 0.5
+MTL: 1
+
+CCUS: CNN model training finished
+CCUS: Clustering finished
+Removed: 1471
+org dataset size: 23336
+new dataset size: 21865
+P: 1.0000
+R: 0.5039
+F: 0.6702
+AUC: 0.8617
+P4C1: 0.2963
+R4C1: 0.3636
+F4C1: 0.3265
+P4C2: 0.5769
+R4C2: 0.2113
+F4C2: 0.3093
+P4C3: 0.6875
+R4C3: 0.2374
+F4C3: 0.3529
+MacroP: 0.5202
+MacroR: 0.2708
+MacroF: 0.3296
+FFF: 0.4419
+
+cost time: 11149.860662221909
+
