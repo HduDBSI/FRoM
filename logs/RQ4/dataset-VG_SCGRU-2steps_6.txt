@@ -1,0 +1,27 @@
+folder: data/VG_data/
+batch_size: 64
+embed_dim: 300
+epoch_num: 20
+lr: 0.0001
+seq_len: 128
+train_file: data/VG_data/preprocessed/train.jsonl
+valid_file: data/VG_data/preprocessed/valid.jsonl
+test_file: data/VG_data/preprocessed/test.jsonl
+device: cuda:1
+model_name: scgru.pth
+seed: 6
+
+P4C1: 0.5106
+R4C1: 0.5455
+F4C1: 0.5275
+P4C2: 0.5570
+R4C2: 0.6197
+F4C2: 0.5867
+P4C3: 0.6809
+R4C3: 0.6906
+F4C3: 0.6857
+MacroP: 0.5828
+MacroR: 0.6186
+MacroF: 0.6000
+total time: 60.16663956642151
+

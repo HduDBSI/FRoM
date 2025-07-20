@@ -1,0 +1,27 @@
+folder: data/Maldonado_data/
+load_keywords: True
+train_file: data/Maldonado_data/preprocessed/train.jsonl
+valid_file: data/Maldonado_data/preprocessed/valid.jsonl
+test_file: data/Maldonado_data/preprocessed/test.jsonl
+seed: 9
+
+texts formated
+Count Vectorizer built
+word transform to vectors
+Count Vectorizer built
+word transform to vectors
+Evaluation
+P4C1: 0.7207
+R4C1: 0.6380
+F4C1: 0.6768
+P4C2: 0.3684
+R4C2: 0.4336
+F4C2: 0.3984
+P4C3: 0.3279
+R4C3: 0.2899
+F4C3: 0.3077
+MacroP: 0.4723
+MacroR: 0.4538
+MacroF: 0.4610
+cost time: 58.61961269378662
+

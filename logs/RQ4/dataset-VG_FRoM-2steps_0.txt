@@ -1,0 +1,40 @@
+batch_size: 32
+token_max_length: 128
+epoch_num: 20
+embed_dim: 768
+lr: 2e-05
+weight_decay: 0.01
+dropout: 0.1
+device: cuda:1
+model_name: FRoM.pth
+folder: data/VG_data/
+train_file: data/VG_data/preprocessed/train.jsonl
+valid_file: data/VG_data/preprocessed/valid.jsonl
+test_file: data/VG_data/preprocessed/test.jsonl
+seed: 0
+class_num: 3
+weight: 0.4
+class_balance: CCUS
+threshold: 0.5
+MTL: 1
+
+CCUS: CNN model training finished
+CCUS: Clustering finished
+Removed: 10
+org dataset size: 1522
+new dataset size: 1512
+Evaluation
+P4C1: 0.8000
+R4C1: 0.6364
+F4C1: 0.7089
+P4C2: 0.6739
+R4C2: 0.8732
+F4C2: 0.7607
+P4C3: 0.8739
+R4C3: 0.7482
+F4C3: 0.8062
+MacroP: 0.7826
+MacroR: 0.7526
+MacroF: 0.7586
+
+
