@@ -67,10 +67,7 @@ pip install tokenizers onnxruntime numpy pyinstaller
 ### 4. Build the Executable
 
 ```bash
-pyinstaller --onefile \
-  --add-data "tokenizer.json:tokenizer.json" \
-  --add-data "FineTunedModel.onnx:FineTunedModel.onnx" \
-  FRoMD.py
+pyinstaller --onefile --add-data "tokenizer.json:tokenizer.json" --add-data "FineTunedModel.onnx:FineTunedModel.onnx" FRoMD.py
 ```
 
 * The final executable will be located in the `dist/` directory.
