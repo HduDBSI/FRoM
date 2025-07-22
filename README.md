@@ -2,13 +2,11 @@
 
 **"Leveraging Multi-Task Learning to Fine-Tune RoBERTa for Self-Admitted Technical Debt Identification and Classification"**
 
-## Environment
+## Environment and Installation
 
 * Python 3.10
 * CUDA 11.5
-
-## Installation
-
+  
 All dependencies are listed in `requirements.txt`.
 You can install them with a single command:
 
@@ -42,7 +40,7 @@ pip install -r requirements.txt
 
 ## Running Experiments
 
-* `RQ1.py` to `RQ5.py`: Scripts to reproduce the experimental results reported in the paper.
+* `RQ1.py` to `RQ6.py`: Scripts to reproduce the experimental results reported in the paper.
   **Note:** The `/logs` directory contains previous log files.
   If you wish to fully reproduce the experiments on your machine, please clear the `/logs` directory before running these scripts.
 
@@ -57,40 +55,58 @@ The `case.xlsx` file contains data for our case study:
 * Links to the corresponding code for these 40 comments.
 
 ## FRoMD (FRoM Detector)
-Create a `models/` directory in your project root.
+### 📥 Download
 
-Download the model weights `PMFRoM.pth` from
-  [https://github.com/HduDBSI/FRoM/releases/tag/V1.0.0](https://github.com/HduDBSI/FRoM/releases/tag/V1.0.0)
-  and place the file in:
+* **Linux (amd64):**
+  [FRoMD-1.0.0-amd64\_linux.zip](https://github.com/HduDBSI/FRoM/releases/download/V1.0.0/FRoMD-1.0.0-amd64_linux.zip)
 
-  ```
-  /models
-  ```
-To classify comments using FRoMD:
+* **Windows (win64):**
+  [FRoMD-1.0.0-win64.zip](https://github.com/HduDBSI/FRoM/releases/download/V1.0.0/FRoMD-1.0.0-win64.zip)
 
-```bash
-python FRoMD.py --device cpu --text "TODO: refactor this" "buggy code"
-```
+### 🚀 Quick Start
 
-or run interactively:
+#### Linux
 
 ```bash
-python FRoMD.py --device cpu
-```
+# Unzip the release
+unzip FRoMD-1.0.0-amd64_linux.zip
+cd FRoMD-1.0.0
 
-Then enter comments one per line; finish input with an empty line.
-
-To build a standalone executable (optional):
-
-```bash
-pip install pyinstaller
-pyinstaller --onefile --hidden-import torch --hidden-import transformers FRoMD.py
-```
-
-Run the generated file (in `dist/`):
-
-```bash
-cd dist
+# Grant execution permission
 chmod +x FRoMD
-./FRoMD --device cpu --text "TODO: refactor this" "buggy code"
+
+# Run the tool
+./FRoMD
 ```
+
+#### Windows
+
+```bash
+# After unzipping, simply double-click FRoMD.exe
+# Or run from terminal:
+FRoMD.exe
+```
+
+### 💡 Features
+
+FRoMD offers three operating modes:
+
+* **\[1] Interactive Mode**
+  Manually input comments and get instant SATD classification.
+
+* **\[2] Scan Mode**
+  Automatically scan all `.java` files in a directory and output a CSV file with classification results.
+
+* **\[3] JSONL Mode**
+  Classify comments from a JSONL file (one JSON object per line with a `comment` key) and generate a corresponding JSONL output file.
+
+---
+
+### 📂 Output Files
+
+* **Scan Mode Output:**
+  A `detection_result.csv` file will be saved in the target directory.
+
+* **JSONL Mode Output:**
+  A `_detection_result.jsonl` file will be generated alongside the input JSONL file.
+
