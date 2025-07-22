@@ -1,6 +1,3 @@
-Sure! Here is a complete, clean, and professional `README.md` in English, following standard Markdown conventions:
-
-````markdown
 # FRoMD (FRoM Detector)
 
 FRoMD is a lightweight, standalone tool for detecting **Self-Admitted Technical Debt (SATD)** from source code comments. It uses ONNXRuntime for efficient inference and requires no Python environment at runtime.
