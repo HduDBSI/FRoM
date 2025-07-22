@@ -12,11 +12,11 @@ print(f"[System] Initializing")
 satd_types = {0: 'NON-SATD', 1: 'DESIGN DEBT', 2: 'IMPLEMENTATION DEBT', 3: 'DEFECT DEBT'}
 
 if hasattr(sys, '_MEIPASS'):
-    tokenizer_path = os.path.join(sys._MEIPASS, 'roberta/tokenizer.json')
-    model_path = os.path.join(sys._MEIPASS, 'models/PMFRoM.onnx')
+    tokenizer_path = os.path.join(sys._MEIPASS, 'tokenizer.json')
+    model_path = os.path.join(sys._MEIPASS, 'FineTunedModel.onnx')
 else:
-    tokenizer_path = './roberta/tokenizer.json'
-    model_path = './models/PMFRoM.onnx'
+    tokenizer_path = 'tokenizer.json'
+    model_path = 'FineTunedModel.onnx'
 
 def preprocess(comment: str) -> str:
     comment_pattern = compile(r'//|/\*|\*/|\*')
