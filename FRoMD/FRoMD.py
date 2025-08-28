@@ -9,46 +9,36 @@ import sys
 import json
 print(f"[System] Initializing")
 
-satd_types = {0: 'NON-SATD', 1: 'DESIGN DEBT', 2: 'IMPLEMENTATION DEBT', 3: 'DEFECT DEBT'}
+SATD_TYPES = {0: 'NON-SATD', 1: 'DESIGN DEBT', 2: 'IMPLEMENTATION DEBT', 3: 'DEFECT DEBT'}
 
-if hasattr(sys, '_MEIPASS'):
-    tokenizer_path = os.path.join(sys._MEIPASS, 'tokenizer.json')
-    model_path = os.path.join(sys._MEIPASS, 'FineTunedModel.onnx')
-else:
-    tokenizer_path = 'tokenizer.json'
-    model_path = 'FineTunedModel.onnx'
+TOKENIZER_PATH = os.path.join(sys._MEIPASS, 'tokenizer.json') if hasattr(sys, '_MEIPASS') else 'tokenizer.json'
+MODEL_PATH = os.path.join(sys._MEIPASS, 'FineTunedModel.onnx') if hasattr(sys, '_MEIPASS') else 'FineTunedModel.onnx'
 
+# ---------------- Load Tokenizer & Model ----------------
+def load_tokenizer(path=TOKENIZER_PATH):
+    return Tokenizer.from_file(path)
+
+def load_onnx_model(path=MODEL_PATH):
+    device = get_device()
+    print(f"[System] Loading model to {device}")
+    providers = ['CUDAExecutionProvider'] if device == 'GPU' else ['CPUExecutionProvider']
+    return InferenceSession(path, providers=providers)
+
+# ---------------- Text Preprocessing ----------------
 def preprocess(comment: str) -> str:
-    comment_pattern = compile(r'//|/\*|\*/|\*')
-    nonchar_pattern = compile(r'[^\w\s.,!?;:\'\"\-\[\]\(\)@]')
-    space_pattern = compile(r'\s{2,}')
-    hyphen_pattern = compile(r'-{2,}')
-    
-    comment = comment_pattern.sub(' ', comment)
-    comment = space_pattern.sub(' ', comment)
-    comment = nonchar_pattern.sub(' ', comment)
-    comment = hyphen_pattern.sub(' ', comment)
-    
+    comment = compile(r'//|/\*|\*/|\*').sub(' ', comment)
+    comment = compile(r'[^\w\s.,!?;:\'\"\-\[\]\(\)@]').sub(' ', comment)
+    comment = compile(r'\s{2,}').sub(' ', comment)
+    comment = compile(r'-{2,}').sub(' ', comment)
     return comment.strip().lower()
 
-def load_tokenizer():
-    return Tokenizer.from_file(tokenizer_path)
-
-def load_onnx_model():
-    device = get_device()
-    print(f"\n[System] Loading model to {device}")
-    providers = ['CUDAExecutionProvider'] if get_device() == 'GPU' else ['CPUExecutionProvider']
-    return InferenceSession(model_path, providers=providers)
-
-def tokenize_batch(texts, max_length=128):
+# ---------------- Tokenization ----------------
+def tokenize_batch(tokenizer, texts, max_length=128):
     encodings = tokenizer.encode_batch(texts)
-    input_ids = []
-    attention_mask = []
+    input_ids, attention_mask = [], []
 
     for enc in encodings:
-        ids = enc.ids[:max_length]
-        mask = enc.attention_mask[:max_length]
-
+        ids, mask = enc.ids[:max_length], enc.attention_mask[:max_length]
         pad_len = max_length - len(ids)
         input_ids.append(ids + [0] * pad_len)
         attention_mask.append(mask + [0] * pad_len)
@@ -58,6 +48,7 @@ def tokenize_batch(texts, max_length=128):
         'attention_mask': array(attention_mask, dtype=int64)
     }
 
+# ---------------- Progress Bar ----------------
 def simple_progress_bar(iterable, total=None, desc="", length=25):
     total = total or len(iterable)
     start_time = time()
@@ -72,62 +63,44 @@ def simple_progress_bar(iterable, total=None, desc="", length=25):
         yield item
     print()
 
+# ---------------- Prediction ----------------
 def predict_comments(tokenizer, session, texts, batch_size=32):
-    input_name = session.get_inputs()[0].name
-    mask_name = session.get_inputs()[1].name
+    def softmax(logits):
+        e_x = exp(logits - max(logits, axis=-1, keepdims=True))
+        return e_x / e_x.sum(axis=-1, keepdims=True)
+    
+    input_name, mask_name = session.get_inputs()[0].name, session.get_inputs()[1].name
     output_name = session.get_outputs()[0].name
-
-    predictions, probabilities = [], []
+    all_preds, all_probs = [], []
 
     for i in simple_progress_bar(range(0, len(texts), batch_size), desc="[System] Detecting SATD"):
         batch_texts = texts[i:i+batch_size]
-        encodings = tokenize_batch(batch_texts)
+        encodings = tokenize_batch(tokenizer, batch_texts)
         outputs = session.run([output_name], {
             input_name: encodings['input_ids'].astype(int64),
             mask_name: encodings['attention_mask'].astype(int64)
         })[0]
 
-        probs = softmax(outputs)
+        probs = softmax(outputs)   # shape (batch, 4)
         preds = argmax(probs, axis=1)
-        pred_probs = max(probs, axis=1)
-        predictions.extend(preds.tolist())
-        probabilities.extend(pred_probs.tolist())
+        all_preds.extend(preds.tolist())
+        all_probs.extend(probs.tolist()) 
 
-    return predictions, probabilities
+    return all_preds, all_probs
 
-def softmax(logits):
-    e_x = exp(logits - max(logits, axis=-1, keepdims=True))
-    return e_x / e_x.sum(axis=-1, keepdims=True)
-
+# ---------------- Run Detection ----------------
 def run_detection(records, tokenizer, session):
     texts = [preprocess(r['comment']) for r in records]
-    preds, probs = predict_comments(tokenizer, session, texts)
+    preds, all_probs = predict_comments(tokenizer, session, texts)
     for idx, r in enumerate(records):
-        r['prediction'], r['probability'] = satd_types[preds[idx]], probs[idx]
+        r['prediction'] = SATD_TYPES[preds[idx]]
+        r['prob_NON-SATD'] = all_probs[idx][0]
+        r['prob_DESIGN'] = all_probs[idx][1]
+        r['prob_IMPLEMENTATION'] = all_probs[idx][2]
+        r['prob_DEFECT'] = all_probs[idx][3]
     return records
 
-def extract_comments_from_java(file_path):
-    try:
-        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-            content = f.read()
-    except Exception as e:
-        print(f"[Warning] Cannot read {file_path}: {e}")
-        return []
-    return [c.strip() for c in findall(r'//.*|/\*[\s\S]*?\*/', content) if c.strip()]
-
-def scan_files(folder):
-    records, file_count = [], 0
-    for root, _, files in os.walk(folder):
-        for file in files:
-            if file.endswith('.java'):
-                file_count += 1
-                full_path = os.path.join(root, file)
-                comments = extract_comments_from_java(full_path)
-                for comment in comments:
-                    records.append({'filepath': full_path, 'comment': comment})
-    print(f"[System] Found {file_count} .java files, extracted {len(records)} comments.")
-    return records
-
+# ---------------- Interactive Mode ----------------
 def interactive_mode(tokenizer, session):
     print("[System] Enter comments to classify (empty line to finish):")
     texts = []
@@ -141,23 +114,47 @@ def interactive_mode(tokenizer, session):
         print("[Info] No input received, exiting interactive mode.")
         return
 
-    start = time()
     records = [{'filepath': None, 'comment': t} for t in texts]
     results = run_detection(records, tokenizer, session)
 
     print("\n==== Classification Results ====")
+    print("[Info] The numbers after the prediction are probabilities for [NON-SATD, DESIGN, IMPLEMENTATION, DEFECT].")
     for idx, r in enumerate(results):
         print(f"{idx+1}. {r['comment']}")
-        print(f"   → Prediction: {r['prediction']} (prob={r['probability']:.4f})\n")
+        print(f"   → Prediction: {r['prediction']} "
+          f"[{r['prob_NON-SATD']:.4e}, {r['prob_DESIGN']:.4e}, "
+          f"{r['prob_IMPLEMENTATION']:.4e}, {r['prob_DEFECT']:.4e}]\n")
 
+# ---------------- Scan Mode ----------------
 def scan_mode(tokenizer, session):
+    def extract_comments_from_java(file_path):
+        try:
+            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+        except Exception as e:
+            print(f"[Warning] Cannot read {file_path}: {e}")
+            return []
+        return [c.strip() for c in findall(r'//.*|/\*[\s\S]*?\*/', content) if c.strip()]
+
+    def scan_files(folder):
+        records, file_count = [], 0
+        for root, _, files in os.walk(folder):
+            for file in files:
+                if file.endswith('.java'):
+                    file_count += 1
+                    full_path = os.path.join(root, file)
+                    comments = extract_comments_from_java(full_path)
+                    for comment in comments:
+                        records.append({'filepath': full_path, 'comment': comment})
+        print(f"[System] Found {file_count} .java files, extracted {len(records)} comments.")
+        return records
+
     while True:
         folder = input("[System] Enter directory path to scan: ").strip()
         if folder and os.path.exists(folder):
             break
         print("[Error] Valid directory required.")
 
-    start = time()
     records = scan_files(folder)
     if not records:
         print("[System] No comments found.")
@@ -166,33 +163,36 @@ def scan_mode(tokenizer, session):
     results = run_detection(records, tokenizer, session)
     out_csv = os.path.join(folder, 'detection_result.csv')
     with open(out_csv, mode='w', newline='', encoding='utf-8') as f:
-        writer = DictWriter(f, fieldnames=['filepath', 'comment', 'prediction', 'probability'])
+        fieldnames = ['filepath', 'comment', 'prediction',
+                    'prob_NON-SATD', 'prob_DESIGN', 'prob_IMPLEMENTATION', 'prob_DEFECT']
+        writer = DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for r in results:
             writer.writerow(r)
 
     print(f"[System] Results saved to {out_csv}")
 
-def load_jsonl(path):
-    records = []
-    with open(path, 'r', encoding='utf-8') as f:
-        for line in f:
-            try:
-                obj = json.loads(line)
-                if 'comment' in obj:
-                    records.append(obj)
-                else:
-                    print("[Warning] line missing 'comment' field, skipping.")
-            except json.JSONDecodeError:
-                print("[Warning] invalid json line, skipping.")
-    return records
-
-def save_jsonl(records, out_path):
-    with open(out_path, 'w', encoding='utf-8') as f:
-        for rec in records:
-            f.write(json.dumps(rec, ensure_ascii=False) + '\n')
-
+# ---------------- JSONL Mode ----------------
 def jsonl_mode(tokenizer, session):
+    def load_jsonl(path):
+        records = []
+        with open(path, 'r', encoding='utf-8') as f:
+            for line in f:
+                try:
+                    obj = json.loads(line)
+                    if 'comment' in obj:
+                        records.append(obj)
+                    else:
+                        print("[Warning] line missing 'comment' field, skipping.")
+                except json.JSONDecodeError:
+                    print("[Warning] invalid json line, skipping.")
+        return records
+    
+    def save_jsonl(records, out_path):
+        with open(out_path, 'w', encoding='utf-8') as f:
+            for rec in records:
+                f.write(json.dumps(rec, ensure_ascii=False) + '\n')
+
     print("[Info] The file must have one JSON object per line, and each object must contain the key 'comment'.")
 
     while True:
@@ -201,7 +201,6 @@ def jsonl_mode(tokenizer, session):
             break
         print("[Error] Valid file path required.")
 
-    start = time()
     records = load_jsonl(jsonl_path)
     if not records:
         print("[Error] No valid records found in JSONL. Please ensure each line has a 'comment' key.")
@@ -215,6 +214,7 @@ def jsonl_mode(tokenizer, session):
     save_jsonl(results, out_path)
     print(f"[System] Results saved to {out_path}")
 
+# ---------------- Main Menu ----------------
 def main_menu(tokenizer, session):
     while True:
         print("======= SATD Comment Classifier Menu =======")
