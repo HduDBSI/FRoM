@@ -6,7 +6,7 @@ import re
 from RQutils import *
  
 datasets = {
-    # 'dataset-M': 'Maldonado_data/',
+    'dataset-M': 'Maldonado_data/',
     'dataset-VG': 'VG_data/',
 }
 
@@ -82,3 +82,4 @@ for dataset, _ in datasets.items():
         print(lines)
 
         all_dic[dataset][method] = this_metric_dic
+
