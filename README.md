@@ -50,9 +50,15 @@ The `case.xlsx` file contains data for our case study:
 
 * The scan results from FRoMD on **all 4,799 comments** in an open-source project named Presto
   ([Presto v0.278](https://github.com/prestodb/presto/tree/0.278)).
-* Classification results and reasoning for 40 of these comments as provided by **ChatGPT-4o**.
+* Classification results and reasoning for 40 of these comments as provided by **ChatGPT-4o**. Note: All interactions with ChatGPT-4o were manually performed via the web interface, and the outputs were manually recorded. No automated scripts or bots were used.
 * Manual labels for these 40 comments.
 * Links to the corresponding code for these 40 comments.
+* Probability outputs from FRoMD for each comment, captured in four separate columns:
+
+  * `FRoMD_Prob_NON-SATD`: The probability that FRoMD assigns the comment to the **non-SATD** category.
+  * `FRoMD_Prob_DESIGN`: The probability that FRoMD assigns the comment to the **design debt** category.
+  * `FRoMD_Prob_IMPLEMENTATION`: The probability that FRoMD assigns the comment to the **implementation debt** category.
+  * `FRoMD_Prob_DEFECT`: The probability that FRoMD assigns the comment to the **defect debt** category.
 
 ## FRoMD (FRoM Detector)
 ### 📥 Download
@@ -63,6 +69,8 @@ The `case.xlsx` file contains data for our case study:
 * **Windows (win64):**
   [FRoMD-1.0.0-win64.zip](https://github.com/HduDBSI/FRoM/releases/download/V1.0.0/FRoMD-1.0.0-win64.zip)
 
+* **Windows (mac64):**
+  [FRoMD-1.0.0-mac-arm64.zip](https://github.com/HduDBSI/FRoM/releases/download/V1.0.0/FRoMD-1.0.0-mac-arm64.zip)
 ### 🚀 Quick Start
 
 #### Linux
