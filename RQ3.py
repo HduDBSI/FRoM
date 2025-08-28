@@ -1,16 +1,19 @@
 from RQutils import *
 from scipy.stats import ttest_rel
+import time
+import subprocess
 
+
+# compare 4-classification => binary-classfication with directly binary-classification
 datasets = {
     'dataset-M': 'Maldonado_data/',
     'dataset-VG': 'VG_data/',
-    
 }
 
 methods = {
     'CNN-based': 'CNN_based.py',
     'XGB-based': 'XGB_based.py',
-    'SCGRU': 'scgru/SCGRU.py',
+    'SCGRU': 'SCGRU.py',
     'FRoM': 'FRoM.py',
 }
 
