@@ -67,7 +67,7 @@ The `case.xlsx` file contains data for our case study:
   [FRoMD-1.0.0-amd64\_linux.zip](https://github.com/HduDBSI/FRoM/releases/download/V2.0.0/FRoMD-1.0.0-linux_amd64.zip)
 
 * **Windows (win64):**
-  [FRoMD-1.0.0-win64.zip](https://github.com/HduDBSI/FRoM/releases/download/V2.0.0/FRoMD-1.0.0-win64.zip)
+  [FRoMD-1.0.0-win64.zip](https://github.com/HduDBSI/FRoM/releases/download/V2.0.0/FRoMD-1.0.0-win_x64.zip)
 
 * **macOS (mac64):**
   [FRoMD-1.0.0-mac-arm64.zip](https://github.com/HduDBSI/FRoM/releases/download/V2.0.0/FRoMD-1.0.0-mac_arm64.zip)
