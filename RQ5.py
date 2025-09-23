@@ -22,7 +22,7 @@ settings = [
 
 rounds = 10
 metric_list = ['F4C1', 'F4C2', 'F4C3']
-log_folder = f'logs/RQ4'
+log_folder = f'logs/RQ5'
 conda_env = 'pyten'
 
 argument = {
