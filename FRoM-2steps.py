@@ -19,7 +19,7 @@ def get_parser():
 
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--token_max_length', type=int, default=128)
-    parser.add_argument('--epoch_num', type=int, default=1)
+    parser.add_argument('--epoch_num', type=int, default=20)
     parser.add_argument('--embed_dim', type=int, default=768)
     parser.add_argument('--lr', type=float, default=2e-5)
     parser.add_argument('--weight_decay', type=float, default=1e-2)
