@@ -25,22 +25,27 @@ class CustomDataset(Dataset):
             'idx': idx 
         }
 
-def read_data(jsonl_file):
+def read_data(jsonl_file, class_num):
     texts = []
     labels = []
 
     with open(jsonl_file, "r") as file:
         for line in file:
             sample = json.loads(line)
-            texts.append(sample["comment_text"])
-            labels.append(sample["label"])
-
+            if class_num == 2:
+                labels.append(int(sample["label"] != 0))
+                texts.append(sample["comment_text"])
+            elif class_num == 3:
+                if sample["label"] != 0:
+                    labels.append(sample["label"]-1)
+                    texts.append(sample["comment_text"])
+            elif class_num == 4:
+                labels.append(sample["label"])
+                texts.append(sample["comment_text"])
     return texts, labels
 
 def build_dataset(jsonl_file, max_length=512, class_num=4):
-    texts, labels = read_data(jsonl_file)
-    if class_num == 2:
-        labels = [int(label != 0) for label in labels]
+    texts, labels = read_data(jsonl_file, class_num)
     dataset = CustomDataset(texts, labels, max_length)
     return dataset
 
